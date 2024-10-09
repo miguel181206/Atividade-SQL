@@ -1,0 +1,58 @@
+-- 1
+
+select nome_funcionario 
+from funcionario
+where sigla_depto in(select sigla_depto
+from departamento
+where nome_depto like '%Recursos humanos%');
+
+-- 2
+select nome_funcionario
+from funcionario
+where sigla_depto in (select sigla_depto
+from projeto
+where sigla_depto in ('MKT', 'RH'));
+
+-- 3
+
+select nome_depto, (select sum(salario)
+from funcionario
+where sigla_depto = sigla_depto) AS salario_total
+from departamento
+
+-- 4
+select nome_funcionario
+from funcionario 
+where sigla_depto = 'IT'
+and salario > (select AVG(salario)
+from funcionario
+where sigla_depto = 'IT');
+
+-- 5
+
+select nome_depto, (select count(codfuncionario)
+from funcionario
+where sigla_depto = sigla_depto
+) AS qtd_funcionarios
+from departamento
+
+-- 6
+
+select nome_funcionario
+from funcionario
+where salario > (
+select avg(salario)
+from funcionario
+where sigla_depto = 'HR'
+) and codfuncionario in ( select codfuncionario
+from projeto
+where sigla_depto = 'HR');
+
+-- 7
+
+select nome_depto, (
+select group_concat(nome_funcionario separator ', ')
+from funcionario
+where sigla_depto = sigla_depto
+) AS funcionario
+from departamento;
